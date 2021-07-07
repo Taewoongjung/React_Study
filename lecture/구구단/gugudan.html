@@ -25,17 +25,18 @@
             e.preventDefault();
             if (parseInt(this.state.value) === this.state.first * this.state.second) {
                 this.setState({
-                    result: '정답',
+                    result: '정답 = ' + this.state.value,
                     first: Math.ceil(Math.random() * 9),
                     second: Math.ceil(Math.random() * 9),
-                    answer: `${this.state.first * this.state.second} =`,
                     value: '',
                 });
+                this.input.focus();
             } else {
                 this.setState({
                     result: '땡',
                     value: '',
                 });
+                this.input.focus();
             }
         }
 
@@ -43,15 +44,26 @@
             this.setState({ value: e.target.value })
         }
 
+        hello; // input창에 포커스 되게 하려면  ref={(a) => {this.hello = a;}}를 input에 추가 해줘야 한다.
+
+        Taewoong = (PositivePower) => {
+            this.hello = PositivePower;
+        }
+
+        // 중요 메모
+        // 함수들을 바깥으로 빼는 이유는 렌더 될 때 마다 함수들이 같이 다시 실행되기 때문에 render함수 안에
+        // js 코드를 넣으면 그 코드도 같이 재생성 되어서 비효율적이기 때문이다.
+
         render() {
+            console.log('렌더링');
             return (
                 <div>
                     <div>{this.state.first}곱하기{this.state.second}는?</div>
                     <form onSubmit={this.onSubmit}>
-                        <input type="number" value={this.state.value} onChange={this.onChange}/>
+                        <input ref={this.Taewoong} type="number" value={this.state.value} onChange={this.onChange}/>
                         <button>입력!</button>
                     </form>
-                    <div>{this.state.answer} {this.state.result}</div>
+                    <div>{this.state.result}</div>
                 </div>
             );
         }
