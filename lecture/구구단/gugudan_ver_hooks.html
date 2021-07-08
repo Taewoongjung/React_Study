@@ -14,12 +14,15 @@
         const [second, setSecond] = React.useState(Math.ceil(Math.random() * 9));
         const [value, setValue] = React.useState('');
         const [result, setResult] = React.useState('');
+        const [correct, setCorrect] = React.useState(1);
         const inputRef = React.useRef(null);
 
         const onSubmit = (e) => {
             e.preventDefault();
             if (parseInt(value) === first * second) {
+                // 여기 밑에 set~~~가 비동기인 이유가 한번에 모아서 처리하기 때문이다. 만약 동기이면 5번 렌더링이 된다.
                 setResult('정답: ' + value);
+                setCorrect((prevCorrect) => prevCorrect + 1);  // 이렇게 파라메터로 (prev~~ ) 를 불러오면 예전의 state를 기억해서 바꿔준다.
                 setFirst(Math.ceil(Math.random() * 9));
                 setSecond(Math.ceil(Math.random() * 9));
                 setValue('');
@@ -39,6 +42,9 @@
         // 함수들을 바깥으로 빼는 이유는 렌더 될 때 마다 함수들이 같이 다시 실행되기 때문에 render함수 안에
         // js 코드를 넣으면 그 코드도 같이 재생성 되어서 비효율적이기 때문이다.
 
+
+
+        console.log('렌더링');
         return (
             <React.Fragment>
                 <div>
@@ -48,6 +54,8 @@
                         <button>입력!</button>
                     </form>
                     <div>{result}</div>
+                    <br />
+                    <div>맞힌개수: {correct}</div>
                 </div>
             </React.Fragment>
         );
