@@ -1,0 +1,60 @@
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>구구단</title>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+    const GuGuDan = () => {
+        const [first, setFirst] = React.useState(Math.ceil(Math.random() * 9));
+        const [second, setSecond] = React.useState(Math.ceil(Math.random() * 9));
+        const [value, setValue] = React.useState('');
+        const [result, setResult] = React.useState('');
+        const inputRef = React.useRef(null);
+
+        const onSubmit = (e) => {
+            e.preventDefault();
+            if (parseInt(value) === first * second) {
+                setResult('정답: ' + value);
+                setFirst(Math.ceil(Math.random() * 9));
+                setSecond(Math.ceil(Math.random() * 9));
+                setValue('');
+                inputRef.current.focus();
+            } else {
+                setResult('땡');
+                setValue('');
+                inputRef.current.focus();
+            }
+        };
+
+        const onChangeInput = (e) => {
+            setValue(e.target.value );
+        };
+
+        // 중요 메모
+        // 함수들을 바깥으로 빼는 이유는 렌더 될 때 마다 함수들이 같이 다시 실행되기 때문에 render함수 안에
+        // js 코드를 넣으면 그 코드도 같이 재생성 되어서 비효율적이기 때문이다.
+
+        return (
+            <React.Fragment>
+                <div>
+                    <div>{first}곱하기{second}는?</div>
+                    <form onSubmit={onSubmit}>
+                        <input ref={inputRef} type="number" value={value} onChange={onChangeInput}/>
+                        <button>입력!</button>
+                    </form>
+                    <div>{result}</div>
+                </div>
+            </React.Fragment>
+        );
+    }
+</script>
+<script type="text/babel">
+    ReactDOM.render(<GuGuDan />, document.querySelector('#root'));
+</script>
+</body>
+</html>

@@ -17,7 +17,6 @@
                 second: Math.ceil(Math.random() * 9),
                 value: '',
                 result: '',
-                answer: '',
             };
         }
 
@@ -46,8 +45,8 @@
 
         hello; // input창에 포커스 되게 하려면  ref={(a) => {this.hello = a;}}를 input에 추가 해줘야 한다.
 
-        Taewoong = (PositivePower) => {
-            this.hello = PositivePower;
+        Taewoong = (a) => {
+            this.hello = a;
         }
 
         // 중요 메모
