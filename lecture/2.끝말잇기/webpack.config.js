@@ -21,4 +21,6 @@ module.exports = {
     // 그러나 client.jsx에서 이미 WordRelay.jsx를 불러오고 있어서 client.jsx만 불러오면 app.js에 합쳐진다.
 
     // (당구장) resolve에 확장자를 추가해주면 entry에 확장자를 적어줄 필요가 없이 웹팩에서 알아서 resolve에 리스트 되어있는 확장자 범위 안에서 찾아준다.
+
+    // 실행 방법: npx webpack 을 해주면 된다.
 };
