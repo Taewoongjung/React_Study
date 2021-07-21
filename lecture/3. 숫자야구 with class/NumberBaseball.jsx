@@ -11,7 +11,7 @@ function getNumbers () { //숫자 네 개를 겹치지 않고 랜덤하게 뽑�
     return array;
 }
 
-class NumberBaseball extends React.Component {
+class NumberBaseball extends Component {
     state = {
         result: '',
         value: '',
@@ -83,7 +83,7 @@ class NumberBaseball extends React.Component {
                 <ul>
                     {tries.map((v, index) => { // v = try, result
                         return (
-                            <Try key={`${index + 1}차 시도 :`} tryInfo={v} />
+                            <Try key={`${index + 1}차 시도 :`} tryInfo={v} /> // tryInfo를 이용해 props로 넘긴다.
                         );
                     })}
                 </ul>
