@@ -1,5 +1,7 @@
 const React = require('react');
 const Try = require('./Try');
+// import React from 'react';
+// import Try from './Try';
 
 function getNumbers () { //숫자 네 개를 겹치지 않고 랜덤하게 뽑는 함수
     const candidate = [1,2,3,4,5,6,7,8,9,];
@@ -27,11 +29,6 @@ const NumberBaseball = () => {
         if (value === answer.join('')) {
             setResult('홈런!', setTries([...tries, { try: value, result: '홈런!' }]));
             alert('게임을 다시 시작합니다!');
-            this.setState({
-                value: '',
-                answer: getNumbers(),
-                tries: [],
-            });
             setValue('');
             setTries([]);
 
@@ -58,7 +55,6 @@ const NumberBaseball = () => {
         }
         console.log(value);
     };
-
     return (
         <>
             <h1>{result}</h1>
@@ -75,6 +71,6 @@ const NumberBaseball = () => {
             </ul>
         </>
     );
-}
+};
 
 module.exports = NumberBaseball;

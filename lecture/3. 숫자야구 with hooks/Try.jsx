@@ -1,7 +1,6 @@
 import React from 'react';
 
-const Try = () => {
-    const { tryInfo } = this.props;
+const Try = ({ tryInfo }) => {
     return (
         <li>
             <div>{tryInfo.try}</div>
