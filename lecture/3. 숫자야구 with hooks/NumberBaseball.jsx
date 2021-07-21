@@ -1,7 +1,5 @@
-const React = require('react');
-const Try = require('./Try');
-// import React from 'react';
-// import Try from './Try';
+import React, {useState} from 'react';
+import Try from './Try';
 
 function getNumbers () { //숫자 네 개를 겹치지 않고 랜덤하게 뽑는 함수
     const candidate = [1,2,3,4,5,6,7,8,9,];
@@ -14,24 +12,27 @@ function getNumbers () { //숫자 네 개를 겹치지 않고 랜덤하게 뽑�
 }
 
 const NumberBaseball = () => {
-    const [result, setResult] = React.useState('');
-    const [value, setValue] = React.useState('');
-    const [tries, setTries] = React.useState([]);
-    const answer = getNumbers();
+    const [result, setResult] = useState('');
+    const [value, setValue] = useState('');
+    const [tries, setTries] = useState([]);
+    const [answer, setAnswer] = useState(getNumbers());
 
     const onChangeInput = (e) => {
-        console.log(this);
+        // console.log(this);
         setValue(e.target.value);
     };
 
     const onSubmitForm = (e) => {
         e.preventDefault();
         if (value === answer.join('')) {
-            setResult('홈런!', setTries([...tries, { try: value, result: '홈런!' }]));
+            setResult('홈런!');
+            setTries((prevTries) => { // 옛날 state로 현재 state를 만들기 위해서 함수형으로 해줘야한다.
+                return [...prevTries, { try: value, result: '홈런!' }]
+            });
             alert('게임을 다시 시작합니다!');
             setValue('');
+            setAnswer(getNumbers());
             setTries([]);
-
         } else { // 답 틀렸으면
             const answerArray = value.split('').map((v) => parseInt(v));
             let strike = 0;
@@ -40,6 +41,7 @@ const NumberBaseball = () => {
                 setResult(`10번 넘게 틀려서 실패! 답은 ${answer.join(',')}였습니다!`)
                 alert('게임을 다시 시작합니다!');
                 setValue('');
+                setAnswer(getNumbers());
                 setTries([]);
             } else {
                 for (let i = 0; i < 4; i++) {
@@ -49,7 +51,9 @@ const NumberBaseball = () => {
                         ball ++;
                     }
                 }
-                setTries([...tries, { try: value, result: `${strike} 스트라이크, ${ball} 볼입니다`}]);
+                setTries((prevTries) => {
+                   return [...prevTries, { try: value, result: `${strike} 스트라이크, ${ball} 볼입니다`}]
+                });
                 setValue('');
             }
         }
@@ -73,4 +77,4 @@ const NumberBaseball = () => {
     );
 };
 
-module.exports = NumberBaseball;
+export default NumberBaseball;
