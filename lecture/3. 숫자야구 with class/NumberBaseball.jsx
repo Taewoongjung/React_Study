@@ -23,10 +23,16 @@ class NumberBaseball extends Component {
         const { result, value, tries, answer } = this.state
         e.preventDefault();
         if (value === answer.join('')) {
-            this.setState({
-                result: '홈런!',
-                tries: [...tries, { try: value, result: '홈런!' }],
+            this.setState((prevState) => {
+                return {
+                    result: '홈런!',
+                    tries: [...prevState.tries, { try: value, result: '홈런!' }] // 옛날 state로 현재의 state를 만들 때는 함수형 state를 사용해야한다.
+                }
             });
+            // this.setState({              위에 있는걸로 바뀜
+            //     result: '홈런!',
+            //     tries: [...prevState.tries, { try: value, result: '홈런!' }]
+            // });
             alert('게임을 다시 시작합니다!');
             this.setState({
                 value: '',
@@ -55,9 +61,11 @@ class NumberBaseball extends Component {
                         ball ++;
                     }
                 }
-                this.setState({
-                    tries: [...tries, { try: value, result: `${strike} 스트라이크, ${ball} 볼입니다`}],
-                    value: '',
+                this.setState((prevState) => {
+                    return {
+                        tries: [...prevState.tries, { try: value, result: `${strike} 스트라이크, ${ball} 볼입니다`}],
+                        value: '',
+                    }
                 });
             }
         }
