@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Ball from './Ball';
 
 function getWinNumbers() {
     console.log('getWinNumbers');
@@ -14,18 +15,51 @@ function getWinNumbers() {
 
 class Lotto extends Component {
     state = {
-        winNumbers: getWinNumbers(),
+        winNumbers: getWinNumbers(), // 당첨 숫자들
         winBalls: [],
-        bonus: null,
+        bonus: null, // 보너스 공
         redo: false,
     };
 
-    onClickRedo() {
+    timeouts = [];
 
+    componentDidMount() {
+        const { winNumbers } = this.state;
+        for (let i = 0; i < this.state.winNumbers.length - 1; i++) { // 비동기에다가 let을 쓰면 closure문제 안생긴다 || 보너스공을 빼야하니 -1을 함.
+            this.timeouts[i] = setTimeout(() => {
+                this.setState((prevState) => {
+                    return {
+                        winBalls: [...prevState.winBalls, winNumbers[i]],
+                    };
+                });
+            }, (i + 1) * 1000); // 1초마다 하나씩 추가된다.
+        }
+        this.timeouts[6] = setTimeout(() => {
+            this.setState({
+                bonus:winNumbers[6],
+                redo: true,
+            });
+        }, 7000) // 마지막이 7초니깐 7초를 해준다.
     }
 
+    componentWillUnmount() {
+        this.timeouts.forEach((v) => {
+            clearTimeout(v);
+        });
+    }
+
+    onClickRedo = () => {
+        this.setState ({
+            winNumbers: getWinNumbers(), // 당첨 숫자들
+            winBalls: [],
+            bonus: null, // 보너스 공
+            redo: false,
+        });
+        this.timeouts = [];
+    };
+
     render() {
-        const { winBall, bonus, redo} = this.state;
+        const { winBalls, bonus, redo} = this.state;
         return (
             <>
                 <div>당첨 숫자</div>
@@ -34,7 +68,7 @@ class Lotto extends Component {
                 </div>
                 <div>보너스!</div>
                 {bonus && <Ball number={bonus} />}
-                <button onCLick={redo > this.onClickRedo : () => {}}>한 번 더!</button>
+                {redo && <button onClick={this.onClickRedo}>한 번 더!</button>}
             </>
         );
     }
