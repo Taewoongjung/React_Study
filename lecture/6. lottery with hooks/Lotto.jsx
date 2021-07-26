@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import Ball from './Ball';
 
 function getWinNumbers() {
@@ -14,7 +14,8 @@ function getWinNumbers() {
 }
 
 const Lotto = () => {
-    const [winNumbers, setWinNumbers] = useState(getWinNumbers());
+    const lottoNumbers = useMemo(() => getWinNumbers(), []);
+    const [winNumbers, setWinNumbers] = useState(lottoNumbers);
     const [winBalls,setWinBalls] = useState([]);
     const [bonus, setBonus] = useState(null);
     const [redo,setRedo] = useState(false);
