@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import Ball from './Ball';
 
 function getWinNumbers() {
@@ -40,13 +40,15 @@ const Lotto = () => {
     }, [timeouts.current]); // deps가 빈 배열이면 componentDidMount랑 같다.
     // 배열에 요소가 있으면 componentDidMount랑 componentDidUpdate 둘 다 수행
 
-    const onClickRedo = () => {
+    const onClickRedo = useCallback(() => {
+        console.log("redo");
+        console.log(winNumbers);
         setWinNumbers(getWinNumbers());
         setWinBalls([]);
         setBonus(null);
         setRedo(false);
         timeouts.current = [];
-    };
+    },[winNumbers]);
 
     return (
         <>
