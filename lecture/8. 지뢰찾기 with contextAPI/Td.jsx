@@ -49,10 +49,11 @@ const getTdText = (code) => {
 };
 
 const Td = ({ rowIndex, cellIndex }) => {
-    const { tableData, dispatch, halted } = useContext(TableContext);
+    const { tableData, halted, dispatch } = useContext(TableContext);
 
     const onClickTd = useCallback(() => {
-        if (halted) { // 게임이 멈췄을 때 아무일도 안일어나게 하기.
+        console.log("left clicked halted = ", halted);
+        if (halted) {
             return;
         }
         switch (tableData[rowIndex][cellIndex]) {
@@ -68,8 +69,9 @@ const Td = ({ rowIndex, cellIndex }) => {
             case CODE.MINE:
                 dispatch({ type: CLICK_MINE, row: rowIndex, cell: cellIndex });
                 return;
+            default:
+                return;
         }
-        dispatch({ type: OPEN_CELL, row: rowIndex, cell: cellIndex });
     }, [tableData[rowIndex][cellIndex]], halted);
 
     const onRightClickTd = useCallback((e) => { // 오른쪽 클릭
@@ -77,6 +79,7 @@ const Td = ({ rowIndex, cellIndex }) => {
         if (halted) {
             return;
         }
+        console.log("right clicked halted = ", halted);
         switch (tableData[rowIndex][cellIndex]) {
             case CODE.NORMAL:
             case CODE.MINE:

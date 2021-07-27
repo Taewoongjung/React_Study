@@ -137,7 +137,6 @@ const MineSearch = () => {
     const [state, dispatch] = useReducer(reducer, initialState);
     const { tableData, halted, timer, result } = state;
 
-    // const value = useMemo(() => ({ tableData: state.tableData, halted: state.halted, dispatch }), [state.tableData, state.halted]);
     const value = useMemo(() => ({ tableData, halted, dispatch }), [tableData, halted]);
 
     return (
