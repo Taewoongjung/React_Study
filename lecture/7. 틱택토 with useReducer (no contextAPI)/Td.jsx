@@ -1,7 +1,17 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useRef, memo } from 'react';
 import {CLICK_CELL} from "./TicTacToe";
 
-const Td = ({rowIndex, cellIndex, dispatch, cellData}) => {
+const Td = memo(({rowIndex, cellIndex, dispatch, cellData}) => {
+    console.log('td rendered');
+
+    // 최적화 방법
+    const ref = useRef([]);
+    useEffect(() => {
+        console.log(rowIndex === ref.current[0], cellIndex === ref.current[1], dispatch === ref.current[2], cellData === ref.current[3]);
+        ref.current = [rowIndex, cellIndex, dispatch, cellData];
+    }, [rowIndex, cellIndex, dispatch, cellData]);
+    // 바뀌는것을 찾는 과정
+
     const onClickTd = useCallback(()=> {
         console.log(rowIndex, cellIndex);
         if (cellData) {
@@ -13,6 +23,6 @@ const Td = ({rowIndex, cellIndex, dispatch, cellData}) => {
     return (
         <td onClick={onClickTd}>{cellData}</td>
     )
-}
+})
 
 export default Td;
