@@ -7,7 +7,9 @@ const initialState = {
     tableData: [['','',''],['','',''],['','','']],
 };
 
-const SET_WINNER = 'SET_WINNER'; // action의 이름은 이렇게 따로 빼놓는게 좋다.
+export const SET_WINNER = 'SET_WINNER'; // action의 이름은 이렇게 따로 빼놓는게 좋다. 모듈로 만들어놓으면 다른 컴포넌트에서도 사용 가능해서.
+export const CLICK_CELL = 'CLICK_CELL';
+export const CHANGE_TURN = 'CHANGE_TURN';
 
 const reducer = (state, action) => {
     switch (action.type) {
@@ -16,16 +18,25 @@ const reducer = (state, action) => {
             return {
                 ...state,
                 winner: action.winner,
+            };
+        case CLICK_CELL:
+            const tableData = [...state.tableData]; // ...이 객체를 얕은복사한느것. spread라고 불린단다.
+            tableData[action.row] = [...tableData[action.row]]; // immer라는 라이브러리로 가독성 해결 가능
+            tableData[action.row][action.cell] = state.turn;
+            return {
+                ...state,
+                tableData,
+            };
+        case CHANGE_TURN: {}
+            return {
+                ...state,
+                turn: state.turn === 'O' ? 'X' : 'O',  // O면 X로 바꾸고, X면 O로 바꾸기
             }
     }
 };
 
 const TicTacToe = () => {
     const [state, dispatch] = useReducer(reducer, initialState);
-
-    // const [winner, setWinner] = useState('');
-    // const [turn, setTurn] = useState('O');
-    // const [tableData, setTableData] = useState([['','',''],['','',''],['','','']]);
 
     const onClickTable = useCallback(() => {
         dispatch({ type: SET_WINNER, winner: '0' }) // dispatch 안에 들어가는 객체는 action 객체 라고 불린다. dispatch 하면 action을 실행하는 개념이다.
@@ -34,7 +45,7 @@ const TicTacToe = () => {
 
     return (
         <>
-            <Table onClick={onClickTable} tableData={state.tableData}/>
+            <Table onClick={onClickTable} tableData={state.tableData} dispatch={dispatch}/>
             {state.winner && <div>{state.winner}님의 승리</div>}
         </>
     )
