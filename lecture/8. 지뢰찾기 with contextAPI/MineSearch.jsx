@@ -30,7 +30,37 @@ const initialState = {
     result: '',
 };
 
-const START_GAME = 'START_GAMEl';
+const plantMine = (row, cell, mine) => {
+    console.log(row, cell, mine);
+    const candidateCell = Array(row * cell).fill().map((arr, i) => {
+        return i;
+    });
+    const shuffleMine = [];
+    // console.log('result = ', row * cell - mine);
+    while (candidateCell.length > row * cell - mine) {
+        const chosen = candidateCell.splice(Math.floor(Math.random() * candidateCell.length), 1)[0];
+        shuffleMine.push(chosen);
+    }
+    const data = [];
+    for (let i = 0; i < row; i++) {
+        const rowData = [];
+        data.push(rowData);
+        for(let j = 0; j < cell; j++) {
+            rowData.push(CODE.NORMAL);
+        }
+    }
+
+    for ( let k = 0; k < shuffleMine.length; k++) {
+        const ver = Math.floor(shuffleMine[k] / cell);
+        const hor = shuffleMine[k] % cell;
+        data[ver][hor] = CODE.MINE;
+    }
+    console.log(data);
+    return data;
+};
+
+export const START_GAME = 'START_GAMEl';
+export const OPEN_CELL = 'OPEN_CELL';
 
 const reducer = (state, action) => {
     switch (action.type) {
@@ -39,6 +69,15 @@ const reducer = (state, action) => {
                 ...state,
                 tableData: plantMine(action.row, action.cell, action.mine)
             };
+        case OPEN_CELL: {
+            const tableData = [...state.tableData];
+            tableData[action.row] = [...state.tableData[action.row]];
+            tableData[action.row][action.cell] = CODE.OPENED;
+            return {
+                ...state,
+                tableData,
+            }
+        }
         default:
             return state;
     }
