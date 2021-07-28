@@ -1,5 +1,5 @@
-import React, {useCallback, useContext} from 'react';
-import {CLICK_MINE, CODE, FLAG_CELL, NORMALIZE_CELL, OPEN_CELL, QUESTION_CELL, TableContext} from "./MineSearch";
+import React, { useContext, useCallback, useMemo, memo } from 'react';
+import { CLICK_MINE, CODE, FLAG_CELL, NORMALIZE_CELL, OPEN_CELL, QUESTION_CELL, TableContext } from './MineSearch';
 
 const getTdStyle = (code) => {
     switch (code) {
@@ -8,6 +8,7 @@ const getTdStyle = (code) => {
             return {
                 background: '#444',
             };
+        case CODE.CLICKED_MINE:
         case CODE.OPENED:
             return {
                 background: 'white',
@@ -30,9 +31,10 @@ const getTdStyle = (code) => {
 };
 
 const getTdText = (code) => {
+    console.log('getTdtext');
     switch (code) {
         case CODE.NORMAL:
-            return
+            return '';
         case CODE.MINE:
             return 'X';
         case CODE.CLICKED_MINE:
@@ -40,19 +42,18 @@ const getTdText = (code) => {
         case CODE.FLAG_MINE:
         case CODE.FLAG:
             return '!';
-        case CODE.QUESTION:
         case CODE.QUESTION_MINE:
+        case CODE.QUESTION:
             return '?';
         default:
-            return '';
+            return code || '';
     }
 };
 
-const Td = ({ rowIndex, cellIndex }) => {
-    const { tableData, halted, dispatch } = useContext(TableContext);
+const Td = memo(({ rowIndex, cellIndex }) => {
+    const { tableData, dispatch, halted } = useContext(TableContext);
 
     const onClickTd = useCallback(() => {
-        console.log("left clicked halted = ", halted);
         if (halted) {
             return;
         }
@@ -60,8 +61,8 @@ const Td = ({ rowIndex, cellIndex }) => {
             case CODE.OPENED:
             case CODE.FLAG_MINE:
             case CODE.FLAG:
-            case CODE.QUESTION:
             case CODE.QUESTION_MINE:
+            case CODE.QUESTION:
                 return;
             case CODE.NORMAL:
                 dispatch({ type: OPEN_CELL, row: rowIndex, cell: cellIndex });
@@ -72,14 +73,13 @@ const Td = ({ rowIndex, cellIndex }) => {
             default:
                 return;
         }
-    }, [tableData[rowIndex][cellIndex]], halted);
+    }, [tableData[rowIndex][cellIndex], halted]);
 
-    const onRightClickTd = useCallback((e) => { // 오른쪽 클릭
+    const onRightClickTd = useCallback((e) => {
         e.preventDefault();
         if (halted) {
             return;
         }
-        console.log("right clicked halted = ", halted);
         switch (tableData[rowIndex][cellIndex]) {
             case CODE.NORMAL:
             case CODE.MINE:
@@ -89,8 +89,8 @@ const Td = ({ rowIndex, cellIndex }) => {
             case CODE.FLAG:
                 dispatch({ type: QUESTION_CELL, row: rowIndex, cell: cellIndex });
                 return;
-            case CODE.QUESTION:
             case CODE.QUESTION_MINE:
+            case CODE.QUESTION:
                 dispatch({ type: NORMALIZE_CELL, row: rowIndex, cell: cellIndex });
                 return;
             default:
@@ -98,13 +98,20 @@ const Td = ({ rowIndex, cellIndex }) => {
         }
     }, [tableData[rowIndex][cellIndex], halted]);
 
+    console.log('td rendered');
+
+    return <RealTd onClickTd={onClickTd} onRightClickTd={onRightClickTd} data={tableData[rowIndex][cellIndex]} />;
+});
+
+const RealTd = memo(({ onClickTd, onRightClickTd, data}) => {
+    console.log('real td rendered');
     return (
         <td
-            style={getTdStyle(tableData[rowIndex][cellIndex])}
+            style={getTdStyle(data)}
             onClick={onClickTd}
             onContextMenu={onRightClickTd}
-        >{getTdText(tableData[rowIndex][cellIndex])}</td>
+        >{getTdText(data)}</td>
     )
-};
+});
 
 export default Td;
